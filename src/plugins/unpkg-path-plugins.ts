@@ -1,10 +1,19 @@
 import * as esbuild from 'esbuild-wasm';
 import axios from 'axios';
+import localForage from 'localforage';
+
+// Cache that uses indexDB (built-in to most browsers)
+// which has more available space than localStorage
+const fileCache = localForage.createInstance({
+  name: 'filecache',
+});
 
 export const unpkgPathPlugin = () => {
   return {
     name: 'unpkg-path-plugin',
     setup(build: esbuild.PluginBuild) {
+      // Customize how esbuild does path resolution
+      // Can intercept import paths and redirect them elsewhere
       build.onResolve({ filter: /.*/ }, async (args: any) => {
         console.log('onResolve', args);
         if (args.path === 'index.js') {
@@ -27,7 +36,8 @@ export const unpkgPathPlugin = () => {
         };
       });
 
-      // onLoad is when the actual contents are the file are fetched
+      // Return the contents of the module and tell esbuild how to interpret it
+      // Can provide virtual path to module
       build.onLoad({ filter: /.*/ }, async (args: any) => {
         console.log('onLoad', args);
 
@@ -41,12 +51,27 @@ export const unpkgPathPlugin = () => {
           };
         }
 
+        // Check to see if we have already fetched this file
+        // and if it is in the cache
+        const cachedResult = await fileCache.getItem<esbuild.OnLoadResult>(
+          args.path
+        );
+        // if it is, return it immediately
+        if (cachedResult) {
+          return cachedResult;
+        }
+
         const { data, request } = await axios.get(args.path);
-        return {
+
+        const result: esbuild.OnLoadResult = {
           loader: 'jsx',
           contents: data,
           resolveDir: new URL('./', request.responseURL).pathname,
         };
+        // store response in cache
+        await fileCache.setItem(args.path, result);
+
+        return result;
       });
     },
   };
