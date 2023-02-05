@@ -33,10 +33,14 @@ const Preview: React.FC<PreviewProps> = ({ code }) => {
   useEffect(() => {
     // Reset contents of frame
     iframe.current.srcdoc = html;
-    // postMessage considered safe communication for iframes
-    // Passes only text
-    iframe.current.contentWindow.postMessage(code, '*');
+    // Delay so iframe's srcdoc has time to update with default html
+    setTimeout(() => {
+      // postMessage considered safe communication for iframes
+      // Passes only text
+      iframe.current.contentWindow.postMessage(code, '*');
+    }, 50);
   }, [code]);
+
   return (
     <div className="preview-wrapper">
       <iframe
