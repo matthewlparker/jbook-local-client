@@ -69,6 +69,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ initialValue, onChange }) => {
         value={initialValue}
         editorDidMount={onEditorDidMount}
         theme="dark"
+        height="100%"
         language="javascript"
         options={{
           wordWrap: 'on',
@@ -80,7 +81,6 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ initialValue, onChange }) => {
           scrollBeyondLastLine: false,
           automaticLayout: true,
         }}
-        height="500px"
       />
     </div>
   );
