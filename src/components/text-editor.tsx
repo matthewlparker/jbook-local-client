@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import MDEditor from '@uiw/react-md-editor';
+import './text-editor.css';
 
 const TextEditor: React.FC = () => {
   const [editing, setEditing] = useState(false);
@@ -8,6 +9,7 @@ const TextEditor: React.FC = () => {
   useEffect(() => {
     const listener = (event: MouseEvent) => {
       if (
+        // Click is inside the referenced div
         ref.current &&
         event.target &&
         ref.current.contains(event.target as Node)
