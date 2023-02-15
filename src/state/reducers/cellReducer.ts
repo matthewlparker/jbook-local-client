@@ -45,10 +45,32 @@ const reducer = produce((state: CellState = initialState, action: Action) => {
 
       return;
     case ActionType.INSERT_CELL_BEFORE:
-      return state;
+      const cell: Cell = {
+        id: randomId(),
+        content: '',
+        type: action.payload.type,
+      };
+
+      state.data[cell.id] = cell;
+
+      const foundIndex = state.order.findIndex(
+        (id) => id === action.payload.id
+      );
+
+      if (foundIndex < 0) {
+        state.order.push(cell.id);
+      } else {
+        state.order.splice(foundIndex, 0, cell.id);
+      }
+
+      return;
     default:
-      return state;
+      return;
   }
 });
+
+const randomId = () => {
+  return Math.random().toString(36).substring(2, 5);
+};
 
 export default reducer;
