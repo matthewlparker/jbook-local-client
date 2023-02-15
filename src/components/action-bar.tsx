@@ -1,3 +1,4 @@
+import './action-bar.css';
 import { useActions } from '../hooks/use-actions';
 import ActionButton from './action-button';
 
@@ -9,7 +10,7 @@ const ActionBar: React.FC<ActionBarProps> = ({ id }) => {
   const { moveCell, deleteCell } = useActions();
 
   return (
-    <div>
+    <div className="action-bar">
       <ActionButton icon="fa-arrow-up" handleClick={() => moveCell(id, 'up')} />
       <ActionButton
         icon="fa-arrow-down"
