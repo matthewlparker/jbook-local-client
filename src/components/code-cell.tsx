@@ -23,7 +23,8 @@ const CodeCell: React.FC<CodeCellProps> = ({ cell }) => {
     return () => {
       clearTimeout(timer);
     };
-  }, [cell.id, cell.content]);
+    // Note: only add to dep array if defined inside component or from props
+  }, [cell.id, cell.content, createBundle]);
 
   return (
     <Resizable direction="vertical">
