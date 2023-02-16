@@ -16,6 +16,11 @@ const CodeCell: React.FC<CodeCellProps> = ({ cell }) => {
 
   // Debounce bundling
   useEffect(() => {
+    if (!bundle) {
+      createBundle(cell.id, cell.content);
+      return;
+    }
+
     const timer = setTimeout(async () => {
       createBundle(cell.id, cell.content);
     }, 750);
@@ -24,6 +29,7 @@ const CodeCell: React.FC<CodeCellProps> = ({ cell }) => {
       clearTimeout(timer);
     };
     // Note: only add to dep array if defined inside component or from props
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cell.id, cell.content, createBundle]);
 
   return (
