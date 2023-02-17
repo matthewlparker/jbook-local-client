@@ -1,5 +1,4 @@
 import produce from 'immer';
-import { Bundle } from 'typescript';
 import { ActionType } from '../action-types';
 import { Action } from '../actions';
 
